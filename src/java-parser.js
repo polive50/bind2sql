@@ -33,7 +33,7 @@ function resolve(expression, type, map) {
   if (/^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?[fFdDlL]?$/.test(value)) return { resolved:true, sqlValue:value.replace(/[fFdDlL]$/, '') };
   const key = value.match(/\.get\s*\(\s*"((?:\\.|[^"\\])*)"\s*\)/);
   if (key && map.has(javaString(key[1]))) { const mapValue = map.get(javaString(key[1])); return type === 'String' || type === 'BigDecimal' ? { resolved:true, sqlValue: type === 'BigDecimal' && /^[+-]?\d/.test(mapValue) ? mapValue : `'${mapValue.replace(/'/g, "''")}'` } : { resolved:true, sqlValue:mapValue }; }
-  return { resolved:false, sqlValue:`/* UNRESOLVED: ${original} */ ?` };
+  return { resolved:false, sqlValue:'/* UNRESOLVED */ ?' };
 }
 
 export function parseBindings(source = '', map = new Map()) {

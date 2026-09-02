@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseMap } from '../src/map-parser.js';
 import { reconstruct } from '../src/java-parser.js';
+import { formatSql } from '../src/sql.js';
 
 const run = (code, map = '') => reconstruct(code, parseMap(map));
 test('reconstructs setString and escapes apostrophes', () => { const r = run('String q = "SELECT * FROM users WHERE name = ?"; x.prepareStatement(q); pst.setString(1, "O\\\'Brien");'); assert.match(r.sql, /'O''Brien'/); });
@@ -13,4 +14,9 @@ test('formats setNull', () => assert.match(run('String q="SELECT * FROM t WHERE 
 test('resolves map get independently of map variable', () => assert.match(run('String q="SELECT * FROM t WHERE x=?"; c.prepareStatement(q); p.setString(1, resultados.get("KEY"));', '{KEY=hello}').sql, /'hello'/));
 test('marks unresolvable binding', () => { const r = run('String q="SELECT * FROM t WHERE x=?"; c.prepareStatement(q); p.setString(1, unknown());'); assert.equal(r.warnings.length, 1); assert.match(r.sql, /UNRESOLVED/); });
 test('does not replace question marks inside SQL string literals', () => assert.match(run('String q="SELECT \'?\' AS marker WHERE id=?"; c.prepareStatement(q); p.setInt(1, 7);').sql, /'\?' AS marker\s+WHERE id=7/));
+test('preserves consecutive spaces in a string binding', () => assert.match(run('String q="SELECT * FROM t WHERE label=?"; c.prepareStatement(q); p.setString(1, "A  B");').sql, /'A  B'/));
+test('does not format keywords inside a string binding', () => { const sql = run('String q="SELECT * FROM t WHERE label=?"; c.prepareStatement(q); p.setString(1, "THIS AND THAT");').sql; assert.match(sql, /'THIS AND THAT'/); assert.doesNotMatch(sql, /THIS\n/); });
+test('preserves whitespace and keywords inside original SQL literals', () => { const sql = formatSql("SELECT 'hello  world AND text FROM somewhere' AS value FROM demo"); assert.match(sql, /'hello  world AND text FROM somewhere'/); assert.match(sql, /\nFROM demo/); });
+test('preserves escaped SQL quotes while formatting', () => assert.match(formatSql("SELECT 'O''Brien  AND friend' FROM demo"), /'O''Brien  AND friend'/));
+test('uses a safe unresolved marker without expression text', () => { const result = run('String q="SELECT * FROM t WHERE x=?"; c.prepareStatement(q); p.setString(1, suspicious);'); assert.match(result.sql, /\/\* UNRESOLVED \*\/ \?/); assert.doesNotMatch(result.sql, /suspicious/); });
 test('realistic concatenated PreparedStatement example', () => { const r = run('String query = "SELECT * FROM users WHERE id = ? " + "AND enabled = ? AND created = ?"; PreparedStatement p = con.prepareStatement(query); p.setString(1, data.get("ID")); p.setBoolean(2, true); p.setDate(3, Date.valueOf("2026-09-02"));', '{ID=12648350}'); assert.match(r.sql, /id = '12648350'/); assert.match(r.sql, /enabled = TRUE/); assert.equal(r.warnings.length, 0); });
