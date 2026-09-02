@@ -3,20 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bind2SQL</title>
+    <title>Bind2SQL — Java PreparedStatement to Executable SQL</title>
+    <meta name="description" content="Turn Java PreparedStatement code into executable SQL locally in your browser. Resolve JDBC bindings and optional runtime map values without sending data anywhere." />
+    <link rel="canonical" href="https://polive50.github.io/bind2sql/" />
+    <meta property="og:title" content="Bind2SQL — Java PreparedStatement to Executable SQL" />
+    <meta property="og:description" content="Reconstruct executable SQL from Java/JDBC PreparedStatement code, entirely in your browser." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://polive50.github.io/bind2sql/" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="shell">
-      <header><h1>Bind2SQL <span>v0.1</span></h1><p>Rebuild executable SQL from Java <code>PreparedStatement</code> code.</p></header>
-      <p class="privacy">Runs locally in your browser. Your SQL and data never leave your device.</p>
-      <section class="inputs">
-        <label>Java code<textarea id="javaCode" spellcheck="false" placeholder="Paste Java code containing a PreparedStatement..."></textarea></label>
-        <label>Optional map / log values<textarea id="mapData" spellcheck="false" placeholder="{USER_ID=42, STATUS=active}"></textarea></label>
+      <header class="hero">
+        <div><h1>Bind2SQL <span>v0.1</span></h1><p class="lead">Turn Java <code>PreparedStatement</code> code into executable SQL.</p><p>Paste your Java/JDBC code and optional runtime values. Bind2SQL reconstructs the query with its parameters ready to run.</p></div>
+        <nav aria-label="Project links"><a href="https://github.com/polive50/bind2sql">View on GitHub</a><a href="https://github.com/polive50/bind2sql/issues/new">Report an issue / Request a feature</a></nav>
+      </header>
+      <p class="privacy"><strong>Runs 100% locally in your browser.</strong> Your SQL, Java code and data never leave your device.</p>
+
+      <section class="tool" aria-label="SQL reconstruction tool">
+        <div class="inputs">
+          <label for="javaCode"><span>Java / PreparedStatement code</span><textarea id="javaCode" spellcheck="false" placeholder="Paste Java code containing a PreparedStatement..."></textarea></label>
+          <label for="mapData"><span>Optional runtime values</span><textarea id="mapData" spellcheck="false" placeholder="{USER_ID=42, STATUS=active}"></textarea><small>Use map/log values to resolve expressions such as <code>data.get(&quot;USER_ID&quot;)</code>.</small></label>
+        </div>
+        <div class="actions"><button id="rebuild">Rebuild SQL</button><button id="example" class="secondary">Load example</button><button id="clear" class="secondary">Clear</button><button id="copy" class="secondary">Copy SQL</button></div>
+        <section class="output"><h2>Reconstructed SQL</h2><pre id="sqlOutput" aria-live="polite">Paste Java code, then choose Rebuild SQL.</pre></section>
+        <section class="details"><div><h2>Bindings</h2><ul id="bindings"><li>None detected.</li></ul></div><div><h2>Warnings</h2><ul id="warnings"><li>None.</li></ul></div></section>
       </section>
-      <div class="actions"><button id="rebuild">Rebuild SQL</button><button id="example" class="secondary">Load example</button><button id="clear" class="secondary">Clear</button><button id="copy" class="secondary">Copy SQL</button></div>
-      <section class="output"><h2>Reconstructed SQL</h2><pre id="sqlOutput" aria-live="polite">Paste Java code, then choose Rebuild SQL.</pre></section>
-      <section class="details"><div><h2>Bindings</h2><ul id="bindings"><li>None detected.</li></ul></div><div><h2>Warnings</h2><ul id="warnings"><li>None.</li></ul></div></section>
+
+      <section class="info-grid" aria-label="How Bind2SQL works and supported features">
+        <article><h2>How it works</h2><ol><li>Paste Java code.</li><li>Add runtime/map values if needed.</li><li>Copy executable SQL.</li></ol><p>Bind2SQL detects PreparedStatement setters and substitutes placeholders while respecting types where it can.</p></article>
+        <article><h2>Supported today</h2><p><strong>PreparedStatement setters:</strong> <code>setString</code>, <code>setInt</code>, <code>setLong</code>, <code>setShort</code>, <code>setByte</code>, <code>setBoolean</code>, <code>setBigDecimal</code>, <code>setDouble</code>, <code>setFloat</code>, <code>setDate</code>, <code>setTimestamp</code>, <code>setTime</code>, <code>setNull</code>.</p><p>Java string concatenation, <code>map.get(&quot;KEY&quot;)</code> resolution, SQL quote escaping, unresolved binding warnings, and local browser-only execution.</p></article>
+      </section>
+
+      <aside class="note"><strong>Limitations.</strong> Bind2SQL uses a pragmatic parser, not a full Java compiler or SQL parser. Complex dynamically-built queries may require manual review.</aside>
+      <footer><div><strong>Bind2SQL Pro is being built.</strong><p>We are working on advanced workflows for support and development.</p></div><a href="https://github.com/polive50/bind2sql/issues/new">Have a workflow you want Bind2SQL to support? Request a feature.</a></footer>
     </main>
     <script type="module" src="src/ui.js"></script>
   </body>

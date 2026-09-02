@@ -1,6 +1,8 @@
 # Bind2SQL
 
-Bind2SQL is a small, browser-only tool that rebuilds executable SQL from Java `PreparedStatement` code. Paste Java code and, optionally, log/map values to see its bound SQL without sending your data anywhere.
+Bind2SQL turns Java `PreparedStatement` code into executable SQL. Paste Java/JDBC code and optional log/map values to reconstruct bound SQL without sending your data anywhere.
+
+**Live demo:** https://polive50.github.io/bind2sql/
 
 ## Run locally
 
