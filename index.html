@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bind2SQL</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header><h1>Bind2SQL <span>v0.1</span></h1><p>Rebuild executable SQL from Java <code>PreparedStatement</code> code.</p></header>
+      <p class="privacy">Runs locally in your browser. Your SQL and data never leave your device.</p>
+      <section class="inputs">
+        <label>Java code<textarea id="javaCode" spellcheck="false" placeholder="Paste Java code containing a PreparedStatement..."></textarea></label>
+        <label>Optional map / log values<textarea id="mapData" spellcheck="false" placeholder="{USER_ID=42, STATUS=active}"></textarea></label>
+      </section>
+      <div class="actions"><button id="rebuild">Rebuild SQL</button><button id="example" class="secondary">Load example</button><button id="clear" class="secondary">Clear</button><button id="copy" class="secondary">Copy SQL</button></div>
+      <section class="output"><h2>Reconstructed SQL</h2><pre id="sqlOutput" aria-live="polite">Paste Java code, then choose Rebuild SQL.</pre></section>
+      <section class="details"><div><h2>Bindings</h2><ul id="bindings"><li>None detected.</li></ul></div><div><h2>Warnings</h2><ul id="warnings"><li>None.</li></ul></div></section>
+    </main>
+    <script type="module" src="src/ui.js"></script>
+  </body>
+</html>
