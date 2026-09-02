@@ -15,6 +15,13 @@ npm start
 
 Then open the local URL printed by the server. The app is static: all parsing happens in the browser; SQL, Java code, and pasted values never leave your device.
 
+## Pro version
+
+Bind2SQL Pro — Batch Workspace adds multi-PreparedStatement reconstruction, batch copy and .sql export.
+
+Purchase:
+https://payhip.com/b/UwDFo
+
 ## v0.1
 
 - Extracts SQL Java strings, including common `+` concatenations.
